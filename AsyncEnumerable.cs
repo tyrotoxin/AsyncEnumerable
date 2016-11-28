@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -89,5 +90,32 @@ namespace System.Collections.Async
         /// </summary>
         /// <returns>An instance of enumerator</returns>
         IEnumerator IEnumerable.GetEnumerator() => GetAsyncEnumeratorAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+    }
+
+    /// <summary>
+    /// Static convenience methods for AsyncEnumerable.
+    /// </summary>
+    public static class AsyncEnumerable
+    {
+        /// <summary>
+        /// Convenience extension to AsyncEnumerable to provide an IAsyncEnumerable implementation of a blocking IEnumerable.
+        /// Useful for satisifying async interfaces with blocking implementations.
+        /// </summary>
+        public static IAsyncEnumerable<T> FromBlocking<T>(IEnumerable<T> enumerable)
+        {
+            return new AsyncEnumerable<T>(async yield =>
+            {
+                foreach (var item in enumerable)
+                    await yield.ReturnAsync(item);
+            });
+        }
+
+        /// <summary>
+        /// Convenience extension to AsyncEnumerable to provide an empty enumerable.
+        /// </summary>
+        public static IAsyncEnumerable<T> Empty<T>()
+        {
+            return FromBlocking(Enumerable.Empty<T>());
+        }
     }
 }
