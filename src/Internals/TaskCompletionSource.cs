@@ -15,7 +15,7 @@ namespace System.Collections.Async.Internals
         static TaskCompletionSource()
         {
             // Collect all necessary fields of a Task that needs to be reset.
-#if NETSTANDARD
+#if NETSTANDARD1_4
             var m_stateFlags = typeof(Task).GetTypeInfo().GetDeclaredField("m_stateFlags");
             var m_continuationObject = typeof(Task).GetTypeInfo().GetDeclaredField("m_continuationObject");
             var m_taskId = typeof(Task).GetTypeInfo().GetDeclaredField("m_taskId");

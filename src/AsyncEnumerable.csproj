@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.4;net45</TargetFrameworks>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>../AsyncEnumerable.pfx</AssemblyOriginatorKeyFile>
+    <DelaySign>False</DelaySign>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyName>AsyncEnumerable</AssemblyName>
+    <RootNamespace>System.Collections.Async</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>AsyncEnumerator</PackageId>
+    <Summary>Asynchronous enumeration with IAsyncEnumerator and ForEachAsync()</Summary>
+    <Version>2.1.0</Version>
+    <Authors>Serge Semenov</Authors>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/tyrotoxin/AsyncEnumerable</PackageProjectUrl>
+    <PackageReleaseNotes>2.1.0: New extension methods: Batch, UnionAll, Single, SingleOrDefault, DefaultIfEmpty, Cast.
+2.0.0: Revise design of the library: same features, but slight paradigm shift and interface breaking changes.
+1.5.0: Add support for .NET Standard, minor improvements.
+1.4.2: Add finalizer to AsyncEnumerator and call Dispose in ForEachAsync and ParallelForEachAsync extension methods.
+1.4.0: Add new generic type AsyncEnumeratorWithState for performance optimization.
+       Now IAsyncEnumerator&lt;T&gt; is covariant.
+       Add ForEachAsync, ParallelForeachAsync, and LINQ-style extension methods for IAsyncEnumerator.
+1.2.1: New Linq-style extension methods in System.Collections.Async namespace.
+1.1.0: Add ParallelForEachAsync extension methods for IEnumerable&lt;T&gt; and IAsyncEnumerable&lt;T&gt; in System.Collections.Async namespace.</PackageReleaseNotes>
+    <PackageTags>IAsyncEnumerable IAsyncEnumerator ForEachAsync ParallelForEachAsync async await foreach parallel</PackageTags>
+    <RepositoryUrl>https://github.com/tyrotoxin/AsyncEnumerable</RepositoryUrl>
+    <Company />
+    
+  </PropertyGroup>
+  
+</Project>
