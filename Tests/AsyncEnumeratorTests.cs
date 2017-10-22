@@ -73,6 +73,10 @@ namespace Tests
         [Test]
         public async Task DisposeByGCAfterPartialEnumeration()
         {
+#if DEBUG
+            Assert.Inconclusive("Will only pass when build with Release mode as the GC is more aggressive which is required.");
+#endif
+
             // ARRANGE
 
             var testDisposable = new TestDisposable();
