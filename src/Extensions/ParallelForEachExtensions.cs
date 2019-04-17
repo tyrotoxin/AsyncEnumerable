@@ -370,6 +370,7 @@ namespace System.Collections.Async
         /// <param name="asyncItemAction">An asynchronous action to perform on the item, where first argument is the item and second argument is item's index in the collection</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
         /// <param name="breakLoopOnException">Set to True to stop processing items when first exception occurs. The result <see cref="AggregateException"/> might contain several exceptions though when faulty tasks finish at the same time.</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -378,13 +379,14 @@ namespace System.Collections.Async
             Func<T, long, Task> asyncItemAction,
             int maxDegreeOfParalellism,
             bool breakLoopOnException,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => collection.ParallelForEachAsync(
                 asyncItemAction,
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -395,6 +397,7 @@ namespace System.Collections.Async
         /// <param name="asyncItemAction">An asynchronous action to perform on the item, where first argument is the item and second argument is item's index in the collection</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
         /// <param name="breakLoopOnException">Set to True to stop processing items when first exception occurs. The result <see cref="AggregateException"/> might contain several exceptions though when faulty tasks finish at the same time.</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -403,13 +406,14 @@ namespace System.Collections.Async
             Func<T, long, Task> asyncItemAction,
             int maxDegreeOfParalellism,
             bool breakLoopOnException,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => enumerator.ParallelForEachAsync(
                 asyncItemAction,
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -419,6 +423,7 @@ namespace System.Collections.Async
         /// <param name="collection">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item, where first argument is the item and second argument is item's index in the collection</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -426,13 +431,14 @@ namespace System.Collections.Async
             this IAsyncEnumerable<T> collection,
             Func<T, long, Task> asyncItemAction,
             int maxDegreeOfParalellism,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => collection.ParallelForEachAsync(
                 asyncItemAction,
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -442,6 +448,7 @@ namespace System.Collections.Async
         /// <param name="enumerator">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item, where first argument is the item and second argument is item's index in the collection</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -449,13 +456,14 @@ namespace System.Collections.Async
             this IAsyncEnumerator<T> enumerator,
             Func<T, long, Task> asyncItemAction,
             int maxDegreeOfParalellism,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => enumerator.ParallelForEachAsync(
                 asyncItemAction,
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -464,19 +472,21 @@ namespace System.Collections.Async
         /// <typeparam name="T">The type of an item</typeparam>
         /// <param name="collection">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item, where first argument is the item and second argument is item's index in the collection</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
         public static Task ParallelForEachAsync<T>(
             this IAsyncEnumerable<T> collection,
             Func<T, long, Task> asyncItemAction,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => collection.ParallelForEachAsync(
                 asyncItemAction,
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -485,19 +495,21 @@ namespace System.Collections.Async
         /// <typeparam name="T">The type of an item</typeparam>
         /// <param name="enumerator">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item, where first argument is the item and second argument is item's index in the collection</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
         public static Task ParallelForEachAsync<T>(
             this IAsyncEnumerator<T> enumerator,
             Func<T, long, Task> asyncItemAction,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => enumerator.ParallelForEachAsync(
                 asyncItemAction,
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -508,6 +520,7 @@ namespace System.Collections.Async
         /// <param name="asyncItemAction">An asynchronous action to perform on the item</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
         /// <param name="breakLoopOnException">Set to True to stop processing items when first exception occurs. The result <see cref="AggregateException"/> might contain several exceptions though when faulty tasks finish at the same time.</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -516,13 +529,14 @@ namespace System.Collections.Async
             Func<T, Task> asyncItemAction,
             int maxDegreeOfParalellism,
             bool breakLoopOnException,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => collection.ParallelForEachAsync(
                 (item, index) => asyncItemAction(item),
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -533,6 +547,7 @@ namespace System.Collections.Async
         /// <param name="asyncItemAction">An asynchronous action to perform on the item</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
         /// <param name="breakLoopOnException">Set to True to stop processing items when first exception occurs. The result <see cref="AggregateException"/> might contain several exceptions though when faulty tasks finish at the same time.</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -541,13 +556,14 @@ namespace System.Collections.Async
             Func<T, Task> asyncItemAction,
             int maxDegreeOfParalellism,
             bool breakLoopOnException,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => enumerator.ParallelForEachAsync(
                 (item, index) => asyncItemAction(item),
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -559,6 +575,7 @@ namespace System.Collections.Async
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
         /// <param name="breakLoopOnException">Set to True to stop processing items when first exception occurs. The result <see cref="AggregateException"/> might contain several exceptions though when faulty tasks finish at the same time.</param>
         /// <param name="gracefulBreak">If True (the default behavior), waits on completion for all started tasks when the loop breaks due to cancellation or an exception</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -568,13 +585,14 @@ namespace System.Collections.Async
             int maxDegreeOfParalellism,
             bool breakLoopOnException,
             bool gracefulBreak,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => collection.ParallelForEachAsync(
                 (item, index) => asyncItemAction(item),
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 gracefulBreak,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -586,6 +604,7 @@ namespace System.Collections.Async
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
         /// <param name="breakLoopOnException">Set to True to stop processing items when first exception occurs. The result <see cref="AggregateException"/> might contain several exceptions though when faulty tasks finish at the same time.</param>
         /// <param name="gracefulBreak">If True (the default behavior), waits on completion for all started tasks when the loop breaks due to cancellation or an exception</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -595,13 +614,14 @@ namespace System.Collections.Async
             int maxDegreeOfParalellism,
             bool breakLoopOnException,
             bool gracefulBreak,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => enumerator.ParallelForEachAsync(
                 (item, index) => asyncItemAction(item),
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 gracefulBreak,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -611,6 +631,7 @@ namespace System.Collections.Async
         /// <param name="collection">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -618,13 +639,14 @@ namespace System.Collections.Async
             this IAsyncEnumerable<T> collection,
             Func<T, Task> asyncItemAction,
             int maxDegreeOfParalellism,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => collection.ParallelForEachAsync(
                 (item, index) => asyncItemAction(item),
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -634,6 +656,7 @@ namespace System.Collections.Async
         /// <param name="enumerator">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -641,13 +664,14 @@ namespace System.Collections.Async
             this IAsyncEnumerator<T> enumerator,
             Func<T, Task> asyncItemAction,
             int maxDegreeOfParalellism,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => enumerator.ParallelForEachAsync(
                 (item, index) => asyncItemAction(item),
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -656,19 +680,21 @@ namespace System.Collections.Async
         /// <typeparam name="T">The type of an item</typeparam>
         /// <param name="collection">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
         public static Task ParallelForEachAsync<T>(
             this IAsyncEnumerable<T> collection,
             Func<T, Task> asyncItemAction,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => collection.ParallelForEachAsync(
                 (item, index) => asyncItemAction(item),
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -677,19 +703,21 @@ namespace System.Collections.Async
         /// <typeparam name="T">The type of an item</typeparam>
         /// <param name="enumerator">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
         public static Task ParallelForEachAsync<T>(
             this IAsyncEnumerator<T> enumerator,
             Func<T, Task> asyncItemAction,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => enumerator.ParallelForEachAsync(
                 (item, index) => asyncItemAction(item),
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -700,6 +728,7 @@ namespace System.Collections.Async
         /// <param name="asyncItemAction">An asynchronous action to perform on the item, where first argument is the item and second argument is item's index in the collection</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
         /// <param name="breakLoopOnException">Set to True to stop processing items when first exception occurs. The result <see cref="AggregateException"/> might contain several exceptions though when faulty tasks finish at the same time.</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -708,13 +737,14 @@ namespace System.Collections.Async
             Func<T, long, Task> asyncItemAction,
             int maxDegreeOfParalellism,
             bool breakLoopOnException,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => collection.ToAsyncEnumerable<T>(runSynchronously: true).ParallelForEachAsync(
                 asyncItemAction,
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -725,6 +755,7 @@ namespace System.Collections.Async
         /// <param name="asyncItemAction">An asynchronous action to perform on the item, where first argument is the item and second argument is item's index in the collection</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
         /// <param name="breakLoopOnException">Set to True to stop processing items when first exception occurs. The result <see cref="AggregateException"/> might contain several exceptions though when faulty tasks finish at the same time.</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -733,13 +764,14 @@ namespace System.Collections.Async
             Func<T, long, Task> asyncItemAction,
             int maxDegreeOfParalellism,
             bool breakLoopOnException,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => enumerator.ToAsyncEnumerator(runSynchronously: true).ParallelForEachAsync(
                 asyncItemAction,
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -780,7 +812,7 @@ namespace System.Collections.Async
             this IEnumerable<T> collection,
             Func<T, long, Task> asyncItemAction,
             int maxDegreeOfParalellism,
-            IProgress<T> progress,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => collection.ToAsyncEnumerable<T>(runSynchronously: true).ParallelForEachAsync(
                 asyncItemAction,
@@ -797,6 +829,7 @@ namespace System.Collections.Async
         /// <param name="enumerator">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item, where first argument is the item and second argument is item's index in the collection</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -804,13 +837,14 @@ namespace System.Collections.Async
             this IEnumerator<T> enumerator,
             Func<T, long, Task> asyncItemAction,
             int maxDegreeOfParalellism,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => enumerator.ToAsyncEnumerator(runSynchronously: true).ParallelForEachAsync(
                 asyncItemAction,
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -819,19 +853,21 @@ namespace System.Collections.Async
         /// <typeparam name="T">The type of an item</typeparam>
         /// <param name="collection">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item, where first argument is the item and second argument is item's index in the collection</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
         public static Task ParallelForEachAsync<T>(
             this IEnumerable<T> collection,
             Func<T, long, Task> asyncItemAction,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => collection.ToAsyncEnumerable<T>(runSynchronously: true).ParallelForEachAsync(
                 asyncItemAction,
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -840,19 +876,21 @@ namespace System.Collections.Async
         /// <typeparam name="T">The type of an item</typeparam>
         /// <param name="enumerator">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item, where first argument is the item and second argument is item's index in the collection</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
         public static Task ParallelForEachAsync<T>(
             this IEnumerator<T> enumerator,
             Func<T, long, Task> asyncItemAction,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => enumerator.ToAsyncEnumerator(runSynchronously: true).ParallelForEachAsync(
                 asyncItemAction,
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -863,6 +901,7 @@ namespace System.Collections.Async
         /// <param name="asyncItemAction">An asynchronous action to perform on the item</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
         /// <param name="breakLoopOnException">Set to True to stop processing items when first exception occurs. The result <see cref="AggregateException"/> might contain several exceptions though when faulty tasks finish at the same time.</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -871,13 +910,14 @@ namespace System.Collections.Async
             Func<T, Task> asyncItemAction,
             int maxDegreeOfParalellism,
             bool breakLoopOnException,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => collection.ToAsyncEnumerable<T>(runSynchronously: true).ParallelForEachAsync(
                 (item, index) => asyncItemAction(item),
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -888,6 +928,7 @@ namespace System.Collections.Async
         /// <param name="asyncItemAction">An asynchronous action to perform on the item</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
         /// <param name="breakLoopOnException">Set to True to stop processing items when first exception occurs. The result <see cref="AggregateException"/> might contain several exceptions though when faulty tasks finish at the same time.</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -896,13 +937,14 @@ namespace System.Collections.Async
             Func<T, Task> asyncItemAction,
             int maxDegreeOfParalellism,
             bool breakLoopOnException,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => enumerator.ToAsyncEnumerator(runSynchronously: true).ParallelForEachAsync(
                 (item, index) => asyncItemAction(item),
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -912,6 +954,7 @@ namespace System.Collections.Async
         /// <param name="collection">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -919,13 +962,14 @@ namespace System.Collections.Async
             this IEnumerable<T> collection,
             Func<T, Task> asyncItemAction,
             int maxDegreeOfParalellism,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => collection.ToAsyncEnumerable<T>(runSynchronously: true).ParallelForEachAsync(
                 (item, index) => asyncItemAction(item),
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -935,6 +979,7 @@ namespace System.Collections.Async
         /// <param name="enumerator">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -942,13 +987,14 @@ namespace System.Collections.Async
             this IEnumerator<T> enumerator,
             Func<T, Task> asyncItemAction,
             int maxDegreeOfParalellism,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => enumerator.ToAsyncEnumerator(runSynchronously: true).ParallelForEachAsync(
                 (item, index) => asyncItemAction(item),
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -957,19 +1003,21 @@ namespace System.Collections.Async
         /// <typeparam name="T">The type of an item</typeparam>
         /// <param name="collection">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
         public static Task ParallelForEachAsync<T>(
             this IEnumerable<T> collection,
             Func<T, Task> asyncItemAction,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => collection.ToAsyncEnumerable<T>(runSynchronously: true).ParallelForEachAsync(
                 (item, index) => asyncItemAction(item),
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -978,19 +1026,21 @@ namespace System.Collections.Async
         /// <typeparam name="T">The type of an item</typeparam>
         /// <param name="enumerator">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
         public static Task ParallelForEachAsync<T>(
             this IEnumerator<T> enumerator,
             Func<T, Task> asyncItemAction,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
             => enumerator.ToAsyncEnumerator(runSynchronously: true).ParallelForEachAsync(
                 (item, index) => asyncItemAction(item),
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                /*progress*/null,
+                /*progress*/progress,
                 cancellationToken);
     }
 }
