@@ -165,7 +165,7 @@ namespace System.Collections.Async
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
         /// <param name="breakLoopOnException">Set to True to stop processing items when first exception occurs. The result <see cref="AggregateException"/> might contain several exceptions though when faulty tasks finish at the same time.</param>
         /// <param name="gracefulBreak">If True (the default behavior), waits on completion for all started tasks when the loop breaks due to cancellation or an exception</param>
-        /// <param name="progress"></param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -269,6 +269,7 @@ namespace System.Collections.Async
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
         /// <param name="breakLoopOnException">Set to True to stop processing items when first exception occurs. The result <see cref="AggregateException"/> might contain several exceptions though when faulty tasks finish at the same time.</param>
         /// <param name="gracefulBreak">If True (the default behavior), waits on completion for all started tasks when the loop breaks due to cancellation or an exception</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -278,6 +279,7 @@ namespace System.Collections.Async
             int maxDegreeOfParalellism,
             bool breakLoopOnException,
             bool gracefulBreak,
+            IProgress<T> progress = null,
             CancellationToken cancellationToken = default)
         {
             if (enumerator == null)
@@ -311,6 +313,7 @@ namespace System.Collections.Async
                             try
                             {
                                 itemActionTask = asyncItemAction(enumerator.Current, itemIndex);
+                                progress?.Report(enumerator.Current);
                             }
                             // there is no guarantee that task is executed asynchronously, so it can throw right away
                             catch (Exception ex)
@@ -381,7 +384,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
-                null,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -406,6 +409,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -428,7 +432,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                null,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -451,6 +455,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -471,7 +476,7 @@ namespace System.Collections.Async
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                null,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -492,6 +497,7 @@ namespace System.Collections.Async
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -516,7 +522,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
-                null,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -541,6 +547,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -567,7 +574,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 gracefulBreak,
-                null,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -594,6 +601,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 gracefulBreak,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -616,7 +624,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                null,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -639,6 +647,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -659,7 +668,7 @@ namespace System.Collections.Async
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                null,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -680,6 +689,7 @@ namespace System.Collections.Async
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -704,7 +714,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
-                null,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -729,6 +739,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -751,7 +762,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                null,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -761,7 +772,7 @@ namespace System.Collections.Async
         /// <param name="collection">The collection of items to perform actions on</param>
         /// <param name="asyncItemAction">An asynchronous action to perform on the item, where first argument is the item and second argument is item's index in the collection</param>
         /// <param name="maxDegreeOfParalellism">Maximum items to schedule processing in parallel. The actual concurrency level depends on TPL settings. Set to 0 to choose a default value based on processor count.</param>
-        /// <param name="progress">Report progress</param>
+        /// <param name="progress">Use for progress updates</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ParallelForEachException">Wraps any exception(s) that occurred inside <paramref name="asyncItemAction"/></exception>
         /// <exception cref="OperationCanceledException">Thrown when the loop is canceled with <paramref name="cancellationToken"/></exception>
@@ -776,7 +787,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                progress,
+                /*progress*/progress,
                 cancellationToken);
 
         /// <summary>
@@ -799,6 +810,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -819,7 +831,7 @@ namespace System.Collections.Async
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                null,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -840,6 +852,7 @@ namespace System.Collections.Async
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -864,7 +877,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
-                null,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -889,6 +902,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 breakLoopOnException,
                 /*gracefulBreak:*/true,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -911,7 +925,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                null,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -934,6 +948,7 @@ namespace System.Collections.Async
                 maxDegreeOfParalellism,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -954,7 +969,7 @@ namespace System.Collections.Async
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
-                null,
+                /*progress*/null,
                 cancellationToken);
 
         /// <summary>
@@ -975,6 +990,7 @@ namespace System.Collections.Async
                 /*maxDegreeOfParalellism:*/0,
                 /*breakLoopOnException:*/false,
                 /*gracefulBreak:*/true,
+                /*progress*/null,
                 cancellationToken);
     }
 }
