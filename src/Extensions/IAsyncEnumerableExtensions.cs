@@ -2221,9 +2221,37 @@ namespace Dasync.Collections
 
             return true;
         }
-        
+
         /// <summary>
-        /// Determines whether any element of a sequence exists or satisfies a condition.
+        /// Determines whether any element of a sequence exists.
+        /// </summary>
+        /// <param name="source">An <see cref="IAsyncEnumerable{T}"/> to check to see if elements exist for.</param>
+        /// <param name="cancellationToken">A cancellation token to cancel the async operation.</param>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <returns>true if the sequence has at least one element; otherwise, false.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
+        public static async Task<bool> AnyAsync<TSource>(
+            this IAsyncEnumerable<TSource> source,
+            CancellationToken cancellationToken = default)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            var enumerator = source.GetAsyncEnumerator(cancellationToken);
+
+            try
+            {
+                bool hasAny = await enumerator.MoveNextAsync().ConfigureAwait(false);
+                return hasAny;
+            }
+            finally
+            {
+                await enumerator.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Determines whether any element of a sequence satisfies a condition.
         /// </summary>
         /// <param name="source">An <see cref="IAsyncEnumerable{T}"/> that contains the elements to apply the predicate to.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
