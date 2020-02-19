@@ -2265,7 +2265,85 @@ namespace Dasync.Collections
 
             return false;
         }
-        
+
+#endregion
+
+#region Count
+        /// <summary>
+        /// Returns the number of elements in a sequence.
+        /// </summary>
+        /// <param name="source">An <see cref="IAsyncEnumerable{T}"/> that contains the elements to count.</param>
+        /// <param name="cancellationToken">A cancellation token to cancel the async operation.</param>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <returns>The number of elements in the input sequence.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="predicate"/> is null.</exception>
+        public static async Task<int> CountAsync<TSource>(
+            this IAsyncEnumerable<TSource> source,
+            CancellationToken cancellationToken = default)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            var enumerator = source.GetAsyncEnumerator(cancellationToken);
+
+            int count = 0;
+
+            try
+            {
+                while (await enumerator.MoveNextAsync().ConfigureAwait(false))
+                {
+                    count++;
+                }
+            }
+            finally
+            {
+                await enumerator.DisposeAsync().ConfigureAwait(false);
+            }
+
+            return count;
+        }
+
+        /// <summary>
+        /// Returns the number of elements in the specified sequence that satisfy a condition.
+        /// </summary>
+        /// <param name="source">An <see cref="IAsyncEnumerable{T}"/> that contains the elements to count.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="cancellationToken">A cancellation token to cancel the async operation.</param>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <returns>A number that represents how many elements in the sequence satisfy the condition in the predicate function.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="predicate"/> is null.</exception>
+        public static async Task<int> CountAsync<TSource>(
+            this IAsyncEnumerable<TSource> source,
+            Func<TSource, bool> predicate,
+            CancellationToken cancellationToken = default)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            var enumerator = source.GetAsyncEnumerator(cancellationToken);
+
+            int count = 0;
+
+            try
+            {
+                while (await enumerator.MoveNextAsync().ConfigureAwait(false))
+                {
+                    if (!predicate(enumerator.Current))
+                    {
+                        count++;
+                    }
+                }
+            }
+            finally
+            {
+                await enumerator.DisposeAsync().ConfigureAwait(false);
+            }
+
+            return count;
+        }
+
 #endregion
 
 #region Shared Helpers
