@@ -76,11 +76,12 @@ namespace Dasync.Collections
                     _exceptionListLock.Enter(ref lockTaken);
                 try
                 {
-                    return _exceptionList;
+                    // Return a copy, so the list being returned will not be modified
+                    // by tasks that are still running if the loop was canceled
+                    return new List<Exception>(_exceptionList);
                 }
                 finally
                 {
-                    _exceptionList = null;
                     _exceptionListLock.Exit(useMemoryBarrier: false);
                 }
             }
