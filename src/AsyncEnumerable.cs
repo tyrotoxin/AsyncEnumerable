@@ -17,6 +17,11 @@ namespace Dasync.Collections
         /// </summary>
         public static IAsyncEnumerable<T> Empty<T>() => AsyncEnumerable<T>.Empty;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         IAsyncEnumerator IAsyncEnumerable.GetAsyncEnumerator(CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
@@ -62,6 +67,16 @@ namespace Dasync.Collections
         {
             _enumerationFunction = enumerationFunction;
         }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <remarks>
+        /// It has been pointed out that overhead costs can be reduced by returning this instead of a new object for the enumerator
+        /// </remarks>
+        protected AsyncEnumerable()
+        {
+
+        }
 
         /// <summary>
         /// Creates an enumerator that iterates through a collection asynchronously
@@ -69,10 +84,19 @@ namespace Dasync.Collections
         /// <param name="cancellationToken">A cancellation token to cancel creation of the enumerator in case if it takes a lot of time</param>
         /// <returns>Returns a task with the created enumerator as result on completion</returns>
         public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
-            => new AsyncEnumerator<T>(_enumerationFunction) { MasterCancellationToken = cancellationToken };
+            => new AsyncEnumerator<T>(_enumerationFunction ?? GetEnumerationFunction()) { MasterCancellationToken = cancellationToken };
 
         IAsyncEnumerator IAsyncEnumerable.GetAsyncEnumerator(CancellationToken cancellationToken)
-            => new AsyncEnumerator<T>(_enumerationFunction) { MasterCancellationToken = cancellationToken };
+            => new AsyncEnumerator<T>(_enumerationFunction ?? GetEnumerationFunction()) { MasterCancellationToken = cancellationToken };
+
+        /// <summary>
+        /// Gets a EnumerationFunction which allows for a user to inherit from <see cref="AsyncEnumerator{T}"/>
+        /// </summary>
+        /// <returns></returns>
+        public virtual Func<AsyncEnumerator<T>.Yield, Task> GetEnumerationFunction()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
