@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -78,7 +79,7 @@ namespace Dasync.Collections
                 {
                     // Return a copy, so the list being returned will not be modified
                     // by tasks that are still running if the loop was canceled
-                    return new List<Exception>(_exceptionList);
+                    return new List<Exception>(_exceptionList ?? Enumerable.Empty<Exception>());
                 }
                 finally
                 {
